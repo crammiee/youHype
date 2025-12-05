@@ -9,27 +9,53 @@ import {
   LinearScale,
   Tooltip,
   TooltipItem,
-  ActiveElement, // ✅ type for clicked elements
+  ActiveElement,
 } from "chart.js";
 import { formatSecondsToLabel } from "../../utils/formatTime";
+import { useState } from "react";
+import Toast from "../common/Toast";
 
 ChartJS.register(LineElement, PointElement, CategoryScale, LinearScale, Tooltip);
 
 interface Props {
   data: { timeSec: number; count: number }[];
+  smoothed: { timeSec: number; count: number }[];
+  peaks: { timeSec: number; count: number }[];
 }
 
-export default function HypeLineChart({ data }: Props) {
+
+export default function HypeLineChart({ data, smoothed, peaks }: Props) {
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const peakMap = new Map(peaks.map((p) => [p.timeSec, p.count]));
+  const peakSeries = data.map((d) => peakMap.get(d.timeSec) ?? null);
+
   const chartData = {
     labels: data.map((d) => formatSecondsToLabel(d.timeSec)),
     datasets: [
       {
-        label: "Hype Intensity",
+        label: "Raw Hype",
         data: data.map((d) => d.count),
-        borderColor: "rgb(255, 99, 132)",
+        borderColor: "rgba(255, 99, 132, 0.5)",
         backgroundColor: "rgba(255, 99, 132, 0.2)",
         tension: 0.3,
       },
+      {
+        label: "Smoothed Hype",
+        data: smoothed.map((d) => d.count),
+        borderColor: "rgb(54, 162, 235)",
+        backgroundColor: "rgba(54, 162, 235, 0.2)",
+        tension: 0.3,
+      },
+      {
+        label: "Detected Peaks",
+        data: peakSeries,
+        borderColor: "rgb(255, 206, 86)",
+        backgroundColor: "rgb(255, 206, 86)",
+        pointStyle: "triangle",
+        pointRadius: 6,
+        showLine: false, // ✅ only markers
+      }
     ],
   };
 
@@ -52,10 +78,15 @@ export default function HypeLineChart({ data }: Props) {
       const label = formatSecondsToLabel(sec);
 
       navigator.clipboard.writeText(label).then(() => {
-        alert(`Copied timestamp ${label} to clipboard`);
+        window.addToast?.(`Copied ${label} to clipboard`);
       });
     },
   };
 
-  return <Line data={chartData} options={options} />;
+  return (
+    <>
+      <Line data={chartData} options={options} />
+      {toastMessage && <Toast message={toastMessage} />}
+    </>
+  );
 }
