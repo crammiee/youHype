@@ -8,7 +8,8 @@ import {
   CategoryScale,
   LinearScale,
   Tooltip,
-  TooltipItem, // ✅ type for tooltip callback
+  TooltipItem,
+  ActiveElement, // ✅ type for clicked elements
 } from "chart.js";
 import { formatSecondsToLabel } from "../../utils/formatTime";
 
@@ -43,6 +44,16 @@ export default function HypeLineChart({ data }: Props) {
           },
         },
       },
+    },
+    onClick: (_event: unknown, elements: ActiveElement[]) => {
+      if (!elements.length) return;
+      const index = elements[0].index;
+      const sec = data[index].timeSec;
+      const label = formatSecondsToLabel(sec);
+
+      navigator.clipboard.writeText(label).then(() => {
+        alert(`Copied timestamp ${label} to clipboard`);
+      });
     },
   };
 
