@@ -21,10 +21,10 @@ interface Props {
   data: { timeSec: number; count: number }[];
   smoothed: { timeSec: number; count: number }[];
   peaks: { timeSec: number; count: number }[];
+  onSeek: (timeSec: number) => void; // ✅ passed down from page
 }
 
-
-export default function HypeLineChart({ data, smoothed, peaks }: Props) {
+export default function HypeLineChart({ data, smoothed, peaks, onSeek }: Props) {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const peakMap = new Map(peaks.map((p) => [p.timeSec, p.count]));
@@ -54,8 +54,8 @@ export default function HypeLineChart({ data, smoothed, peaks }: Props) {
         backgroundColor: "rgb(255, 206, 86)",
         pointStyle: "triangle",
         pointRadius: 6,
-        showLine: false, // ✅ only markers
-      }
+        showLine: false,
+      },
     ],
   };
 
@@ -75,11 +75,13 @@ export default function HypeLineChart({ data, smoothed, peaks }: Props) {
       if (!elements.length) return;
       const index = elements[0].index;
       const sec = data[index].timeSec;
-      const label = formatSecondsToLabel(sec);
 
-      navigator.clipboard.writeText(label).then(() => {
-        window.addToast?.(`Copied ${label} to clipboard`);
-      });
+      // ✅ call onSeek to jump the YouTube player
+      onSeek(sec);
+
+      // optional toast feedback
+      const label = formatSecondsToLabel(sec);
+      setToastMessage(`Seeked to ${label}`);
     },
   };
 
