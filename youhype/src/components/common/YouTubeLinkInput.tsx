@@ -9,34 +9,25 @@ interface Props {
 export default function YouTubeLinkInput({ onVideoId }: Props) {
   const [link, setLink] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!link.trim()) {
-      onVideoId(null);
-      return;
-    }
-    // Extract videoId from link (basic regex for v= or youtu.be)
-    const match = link.match(
-      /(?:v=|\/)([0-9A-Za-z_-]{11})(?:\?|&|$)/
-    );
-    onVideoId(match ? match[1] : null);
+  function extractVideoId(url: string): string | null {
+    // Match watch?v=, youtu.be/, or embed/
+    const match = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})(?:\?|&|$)/);
+    return match ? match[1] : null;
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+    setLink(value);
+    onVideoId(extractVideoId(value));
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
-      <input
-        type="text"
-        placeholder="Optional YouTube link"
-        value={link}
-        onChange={(e) => setLink(e.target.value)}
-        className="border rounded px-2 py-1 flex-1"
-      />
-      <button
-        type="submit"
-        className="px-3 py-1 bg-blue-500 text-white rounded"
-      >
-        Load
-      </button>
-    </form>
+    <input
+      type="text"
+      placeholder="Optional YouTube link"
+      value={link}
+      onChange={handleChange}
+      className="border rounded px-2 py-1 w-full"
+    />
   );
 }

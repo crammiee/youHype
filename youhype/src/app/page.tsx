@@ -1,43 +1,44 @@
 "use client";
 
 import { useState } from "react";
-import FilePicker from "../components/common/FilePicker";
-import HypeLineChart from "../components/chart/HypeLineChart";
-import { useReplayFile } from "../hooks/useReplayFile";
-import ToastContainer from "../components/common/ToastContainer";
-import YouTubePlayer from "@/components/common/YouTubePlayer";
-import { useYouTubePlayer } from "@/hooks/useYouTubePlayer";
+import { useRouter } from "next/navigation";
 import YouTubeLinkInput from "@/components/common/YouTubeLinkInput";
+import FilePicker from "@/components/common/FilePicker";
+import { useReplayFile } from "@/hooks/useReplayFile";
+import { useReplayStore } from "@/store/replayStore";
 
-export default function Page() {
+export default function LandingPage() {
+  const router = useRouter();
   const { data, smoothed, peaks, handleFile } = useReplayFile();
-  const { setPlayer, seekTo } = useYouTubePlayer();
+  const { setReplay } = useReplayStore();
   const [videoId, setVideoId] = useState<string | null>(null);
+
+  function handleContinue() {
+    if (!data.length) {
+      alert("Please upload a replay file first.");
+      return;
+    }
+    setReplay({ data, smoothed, peaks });
+
+    const params = new URLSearchParams();
+    if (videoId) params.set("videoId", videoId);
+
+    router.push(`/results?${params.toString()}`);
+  }
 
   return (
     <main className="p-6 space-y-6">
       <h1 className="text-2xl font-bold">YouTube Stream Hype Timeline</h1>
 
-      {/* Ask for optional link */}
       <YouTubeLinkInput onVideoId={setVideoId} />
-
-      {/* Conditionally render player only if link provided */}
-      {videoId && (
-        <YouTubePlayer videoId={videoId} onReady={setPlayer} />
-      )}
-
       <FilePicker onFileSelected={handleFile} />
 
-      {data.length > 0 && (
-        <HypeLineChart
-          data={data}
-          smoothed={smoothed}
-          peaks={peaks}
-          onSeek={seekTo}
-        />
-      )}
-
-      <ToastContainer />
+      <button
+        onClick={handleContinue}
+        className="px-4 py-2 bg-blue-600 text-white rounded"
+      >
+        Continue →
+      </button>
     </main>
   );
 }
