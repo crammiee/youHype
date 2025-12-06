@@ -1,33 +1,40 @@
-"use client";
+import React, { useState } from "react";
 
-import { useState } from "react";
-
-interface Props {
+interface YouTubeLinkInputProps {
   onVideoId: (id: string | null) => void;
+  className?: string;
+  placeholder?: string;
 }
 
-export default function YouTubeLinkInput({ onVideoId }: Props) {
+export default function YouTubeLinkInput({
+  onVideoId,
+  className = "",
+  placeholder = "Paste YouTube link...",
+}: YouTubeLinkInputProps) {
   const [link, setLink] = useState("");
-
-  function extractVideoId(url: string): string | null {
-    // Match watch?v=, youtu.be/, or embed/
-    const match = url.match(/(?:v=|\/)([0-9A-Za-z_-]{11})(?:\?|&|$)/);
-    return match ? match[1] : null;
-  }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const value = e.target.value;
     setLink(value);
-    onVideoId(extractVideoId(value));
+
+    // Extract videoId from YouTube URL
+    const match = value.match(
+      /(?:v=|\/)([0-9A-Za-z_-]{11})(?:\?|&|$)/
+    );
+    onVideoId(match ? match[1] : null);
   }
 
   return (
     <input
       type="text"
-      placeholder="Optional YouTube link"
       value={link}
       onChange={handleChange}
-      className="border rounded px-2 py-1 w-full"
+      placeholder={placeholder}
+      className={`w-full px-4 py-3 rounded-lg 
+                  bg-surfaceLight/80 border border-gray-600 
+                  text-textPrimary placeholder-textSecondary
+                  focus:outline-none focus:border-accent focus:ring-2 focus:ring-accent
+                  transition duration-200 ${className}`}
     />
   );
 }

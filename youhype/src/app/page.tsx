@@ -27,11 +27,15 @@ export default function LandingPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-background text-textPrimary font-sans">
+    <main className="min-h-screen flex flex-col items-center justify-center 
+                     bg-gradient-to-b from-background via-surface to-surfaceLight 
+                     text-textPrimary font-sans px-6">
       {/* Hero Section */}
-      <h1 className="text-4xl font-bold mb-4">YouTube Stream Hype Timeline</h1>
-      <p className="text-textSecondary mb-8 text-center max-w-lg">
-        Upload your replay file and optionally paste a YouTube link to analyze hype moments.
+      <h1 className="text-5xl font-extrabold mb-4 bg-gradient-to-r from-accent to-purple-400 bg-clip-text text-transparent">
+        youHype
+      </h1>
+      <p className="text-textSecondary mb-10 text-center max-w-xl">
+        Discover hype moments in your streams. Upload your replay file and optionally link your YouTube stream to analyze what excites your audience.
       </p>
 
       {/* Inputs */}
@@ -40,7 +44,10 @@ export default function LandingPage() {
         <FilePicker onFileSelected={handleFile} />
         <button
           onClick={handleContinue}
-          className="w-full py-2 bg-accent text-white rounded hover:bg-accent-hover transition"
+          className="w-full py-3 rounded-lg font-medium 
+                     bg-gradient-to-r from-accent to-purple-600 
+                     hover:from-purple-600 hover:to-accent 
+                     transition-all duration-300 shadow-lg"
         >
           Continue →
         </button>
