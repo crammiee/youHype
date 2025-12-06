@@ -6,6 +6,7 @@ import YouTubeLinkInput from "@/components/common/YouTubeLinkInput";
 import FilePicker from "@/components/common/FilePicker";
 import { useReplayFile } from "@/hooks/useReplayFile";
 import { useReplayStore } from "@/store/replayStore";
+import AccentButton from "@/components/common/AccentButton";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -42,15 +43,9 @@ export default function LandingPage() {
       <div className="w-full max-w-md space-y-4">
         <YouTubeLinkInput onVideoId={setVideoId} />
         <FilePicker onFileSelected={handleFile} />
-        <button
-          onClick={handleContinue}
-          className="w-full py-3 rounded-lg font-medium 
-                     bg-gradient-to-r from-accent to-purple-600 
-                     hover:from-purple-600 hover:to-accent 
-                     transition-all duration-300 shadow-lg"
-        >
+        <AccentButton onClick={handleContinue}>
           Continue →
-        </button>
+        </AccentButton>
       </div>
     </main>
   );
