@@ -27,18 +27,24 @@ export default function LandingPage() {
   }
 
   return (
-    <main className="p-6 space-y-6">
-      <h1 className="text-2xl font-bold">YouTube Stream Hype Timeline</h1>
+    <main className="min-h-screen flex flex-col items-center justify-center bg-background text-textPrimary font-sans">
+      {/* Hero Section */}
+      <h1 className="text-4xl font-bold mb-4">YouTube Stream Hype Timeline</h1>
+      <p className="text-textSecondary mb-8 text-center max-w-lg">
+        Upload your replay file and optionally paste a YouTube link to analyze hype moments.
+      </p>
 
-      <YouTubeLinkInput onVideoId={setVideoId} />
-      <FilePicker onFileSelected={handleFile} />
-
-      <button
-        onClick={handleContinue}
-        className="px-4 py-2 bg-blue-600 text-white rounded"
-      >
-        Continue →
-      </button>
+      {/* Inputs */}
+      <div className="w-full max-w-md space-y-4">
+        <YouTubeLinkInput onVideoId={setVideoId} />
+        <FilePicker onFileSelected={handleFile} />
+        <button
+          onClick={handleContinue}
+          className="w-full py-2 bg-accent text-white rounded hover:bg-accent-hover transition"
+        >
+          Continue →
+        </button>
+      </div>
     </main>
   );
 }
