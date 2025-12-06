@@ -8,6 +8,7 @@ interface Props {
 
 export default function FilePicker({ onFileSelected }: Props) {
   const [isDragging, setIsDragging] = useState(false);
+  const [fileName, setFileName] = useState<string | null>(null);
 
   function handleDrop(e: DragEvent<HTMLDivElement>) {
     e.preventDefault();
@@ -15,6 +16,7 @@ export default function FilePicker({ onFileSelected }: Props) {
 
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       const file = e.dataTransfer.files[0];
+      setFileName(file.name);
       onFileSelected(file);
       e.dataTransfer.clearData();
     }
@@ -32,6 +34,7 @@ export default function FilePicker({ onFileSelected }: Props) {
   function handleFileInput(e: React.ChangeEvent<HTMLInputElement>) {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+      setFileName(file.name);
       onFileSelected(file);
     }
   }
@@ -61,6 +64,7 @@ export default function FilePicker({ onFileSelected }: Props) {
       >
         Choose File
       </label>
+      {fileName && <p className="mt-2">Uploaded: {fileName}</p>}
     </div>
   );
 }
