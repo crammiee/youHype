@@ -8,7 +8,7 @@ export async function POST(req: Request) {
     res.cookies.set("auth", "ok", {
       path: "/",
       httpOnly: true,
-      secure: true, // works in Vercel HTTPS
+      secure: process.env.NODE_ENV === "production",
       maxAge: 60 * 60 * 24, // 24h
       sameSite: "lax",
     });
