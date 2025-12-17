@@ -1,7 +1,6 @@
 "use client";
 
-export const dynamic = "force-dynamic";
-
+import { Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useReplayStore } from "@/store/replayStore";
 import { useYouTubePlayer } from "@/hooks/useYouTubePlayer";
@@ -9,7 +8,7 @@ import YouTubePlayer from "@/components/common/YouTubePlayer";
 import HypeLineChart from "@/components/chart/HypeLineChart";
 import ToastContainer from "@/components/common/ToastContainer";
 
-export default function ResultsPage() {
+function ResultsContent() {
   const searchParams = useSearchParams();
   const videoId = searchParams.get("videoId");
 
@@ -46,5 +45,13 @@ export default function ResultsPage() {
 
       <ToastContainer />
     </main>
+  );
+}
+
+export default function ResultsPage() {
+  return (
+    <Suspense fallback={<div className="p-6 text-center">Loading results...</div>}>
+      <ResultsContent />
+    </Suspense>
   );
 }
