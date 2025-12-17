@@ -1,7 +1,6 @@
-export const dynamic = "force-dynamic";
-
-// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 "use client";
+
+export const dynamic = "force-dynamic";
 
 import { useSearchParams } from "next/navigation";
 import { useReplayStore } from "@/store/replayStore";
