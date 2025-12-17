@@ -8,6 +8,8 @@ export function bucketizeMessages(
 
   for (const e of entries) {
     const offsetMs = e.videoOffsetMs ?? e.timestampMs;
+    if (offsetMs === undefined) continue; // skip invalid entries
+
     const timeSec = Math.floor(offsetMs / 1000);
     const bucket = Math.floor(timeSec / bucketSizeSec) * bucketSizeSec;
     buckets[bucket] = (buckets[bucket] ?? 0) + 1;
